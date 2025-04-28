@@ -11,12 +11,20 @@ use App\Http\Controllers\AdminWhitelistController;
 use App\Http\Controllers\AdminLoaderController;
 use App\Http\Controllers\AdminIgnoreController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\InstallController;
 use Illuminate\Support\Facades\Auth;
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
-// Redirection de la route racine vers la page de connexion
+// Routes d'installation
+Route::get('/install', [InstallController::class, 'show'])->name('install.show');
+Route::post('/install', [InstallController::class, 'install'])->name('install.process');
+
+// Redirection de la route racine vers la page de connexion ou admin selon l'état de connexion
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('admin.index');
+    }
     return redirect()->route('login');
 });
 

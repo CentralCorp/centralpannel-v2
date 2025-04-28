@@ -23,6 +23,8 @@ return new class extends Migration {
             $table->string('game_folder_name', 100)->nullable();
             $table->integer('role_display')->nullable()->default(1);
             $table->integer('money_display')->nullable()->default(0);
+            $table->integer('min_ram')->nullable()->default(2048);
+            $table->integer('max_ram')->nullable()->default(4096);
 
             $table->timestamps();
         });

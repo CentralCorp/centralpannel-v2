@@ -82,6 +82,16 @@
                     <input type="text" class="form-control" id="azuriom_url" name="azuriom_url" placeholder="https:/votresite.com" value="{{ old('azuriom_url', $options->azuriom_url) }}">
                 </div>
 
+                <div class="mb-3">
+                    <label for="min_ram" class="form-label">Ram minimum par defaut</label>
+                    <input type="number" class="form-control" id="default_min_ram" name="min_ram" placeholder="2048" value="{{ old('min_ram', $options['min_ram'] ?? 2048) }}" min="512" max="65536">
+                </div>
+
+                <div class="mb-3">
+                    <label for="max_ram" class="form-label">Ram maximum par defaut</label>
+                    <input type="number" class="form-control" id="default_max_ram" name="max_ram" placeholder="4096" value="{{ old('max_ram', $options['max_ram'] ?? 4096) }}" min="512" max="65536">
+                </div>
+
                 <button type="submit" class="btn btn-primary">Mettre à jour</button>
             </form>
         </div>

@@ -21,6 +21,8 @@ class AdminController extends Controller
             'role_display' => 'nullable|integer',
             'money_display' => 'nullable|integer',
             'azuriom_url' => 'required|nullable|string|url',
+            'min_ram' => 'required|integer|min:512|max:65536',
+            'max_ram' => 'required|integer|min:512|max:65536',
         ]);
 
         if ($validator->fails()) {

@@ -20,6 +20,8 @@ class OptionsGeneral extends Model
         'role_display',
         'money_display',
         'azuriom_url',
+        'min_ram',
+        'max_ram',
     ];
 }
 
