@@ -2,55 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
-use App\Models\User;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InstallController extends Controller
 {
-    private function ensureDatabaseExists()
+    public function dbConfiguration(): View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
     {
-        $databasePath = database_path('database.sqlite');
-
-        if (!file_exists($databasePath)) {
-            file_put_contents($databasePath, '');
-        }
+        return view('install.db');
     }
 
-    public function showInstallForm()
+    public function submitDbConfiguration(Request $request): \Illuminate\Http\RedirectResponse
     {
-        $this->ensureDatabaseExists();
-
-        if (Schema::hasTable('users') && User::count() > 0) {
-            return redirect('/login')->with('status', 'Le système est déjà installé.');
+        $request->validate([
+            'db_host' => 'required',
+            'db_name' => 'required',
+            'db_user' => 'required',
+            'db_password' => 'required',
+        ]);
+        try {
+            DB::connection()->getPdo();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['db_connection' => 'Impossible de se connecter à la base de données.']);
         }
 
-        return view('install');
+        return redirect()->route('install.user.creation');
     }
 
-    public function install(Request $request)
-{
-    $this->ensureDatabaseExists();
+    public function userCreation(): View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
+    {
+        return view('install.user');
+    }
 
-    Artisan::call('migrate', [
-        '--force' => true,
-    ]);
+    public function submitUserCreation(Request $request): \Illuminate\Foundation\Application|\Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
 
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|min:8|confirmed',
-    ]);
-
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-    ]);
-
-    return redirect('/login')->with('status', 'Installation terminée. Vous pouvez vous connecter.');
+        return redirect('/')->with('success', 'Installation réussie !');
+    }
 }
 
-}
