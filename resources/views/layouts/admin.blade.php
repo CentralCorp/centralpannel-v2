@@ -36,6 +36,15 @@
                 <span class="align-middle">Admin Panel</span>
             </a>
             <ul class="sidebar-nav">
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->routeIs('admin.config') ? 'active' : '' }}" href="{{ route('admin.config') }}">
+                        <i class="bi bi-gear align-middle"></i> <span class="align-middle">Config</span>
+                    </a>
+                </li>
+                
+
+
                 <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.general') ? 'active' : '' }}" href="{{ route('admin.general') }}">
                         <i class="bi bi-gear align-middle"></i> <span class="align-middle">General</span>
@@ -97,7 +106,7 @@
                     Discord
                 </a>
 
-                <a href="https://vexato.github.io/centralcorp.github.io/" class="btn btn-outline-secondary mx-1" target="_blank" rel="noopener noreferrer">
+                <a href="https://centralcorp.github.io/" class="btn btn-outline-secondary mx-1" target="_blank" rel="noopener noreferrer">
                     <i class="bi bi-journals"></i>
                     Documentation
                 </a>

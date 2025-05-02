@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminLoaderController;
 use App\Http\Controllers\AdminIgnoreController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InstallController;
+use App\Http\Controllers\AdminConfigController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes(['register' => false]);
@@ -34,10 +35,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         return view('admin.index');
     })->name('admin.index');
 
-    Route::get('/general', function () {
-        return view('admin.general');
-    })->name('admin.general');
+    Route::get('/config', function () {
+        return view('admin.config');
+    })->name('admin.config');
+    Route::post('/config/update', [AdminConfigController::class, 'updateConfig'])->name('admin.config.update');
 
+    Route::get('/general', [AdminController::class, 'general'])->name('admin.general');
+    Route::post('/general/update', [AdminController::class, 'updateGeneral'])->name('admin.general.update');
     Route::get('/security', [AdminSecurityController::class, 'show'])->name('admin.security');
     Route::post('/security/update', [AdminSecurityController::class, 'update'])->name('admin.security.update');
 
@@ -71,8 +75,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 });
 
 // Routes sans le préfixe 'admin'
-Route::get('/general', [AdminController::class, 'general'])->name('admin.general');
-Route::post('/general', [AdminController::class, 'updateGeneral'])->name('admin.general.update');
+
 Route::get('/file-manager', function () {
     return view('admin.file-manager');
 })->name('admin.file-manager');
