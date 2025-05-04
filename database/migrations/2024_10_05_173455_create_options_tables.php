@@ -32,11 +32,13 @@ return new class extends Migration {
         // Table options_server
         Schema::create('options_server', function (Blueprint $table) {
             $table->id();
-            $table->string('server_name', 100)->nullable();
-            $table->string('server_ip', 50)->nullable();
-            $table->integer('server_port')->nullable()->default(0);
-            $table->string('icon', 255)->nullable()->default('');
-
+            $table->integer('server_id')->unique();
+            $table->string('server_name');
+            $table->string('server_ip');
+            $table->string('server_port');
+            $table->string('icon')->nullable();
+            $table->string('type');
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
 

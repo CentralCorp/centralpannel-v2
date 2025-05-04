@@ -35,10 +35,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         return view('admin.index');
     })->name('admin.index');
 
-    Route::get('/config', function () {
-        return view('admin.config');
-    })->name('admin.config');
-    Route::post('/config/update', [AdminConfigController::class, 'updateConfig'])->name('admin.config.update');
+    Route::get('/config', [AdminConfigController::class, 'show'])->name('admin.config');
+    Route::post('/config', [AdminConfigController::class, 'update'])->name('admin.config.update');
 
     Route::get('/general', [AdminController::class, 'general'])->name('admin.general');
     Route::post('/general/update', [AdminController::class, 'updateGeneral'])->name('admin.general.update');
@@ -47,6 +45,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('/server', [AdminServerController::class, 'show'])->name('admin.server');
     Route::post('/server/update', [AdminServerController::class, 'update'])->name('admin.server.update');
+    Route::post('/admin/server/set-default', [AdminServerController::class, 'setDefaultServer'])->name('admin.server.set-default');
 
     Route::get('/ui', [AdminUIController::class, 'show'])->name('admin.ui');
     Route::post('/ui/update', [AdminUIController::class, 'update'])->name('admin.ui.update');

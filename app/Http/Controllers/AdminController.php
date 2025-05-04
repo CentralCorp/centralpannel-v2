@@ -20,7 +20,6 @@ class AdminController extends Controller
             'email_verified' => 'boolean',
             'role_display' => 'nullable|integer',
             'money_display' => 'nullable|integer',
-            'azuriom_url' => 'required|nullable|string|url',
             'min_ram' => 'required|integer|min:512|max:65536',
             'max_ram' => 'required|integer|min:512|max:65536',
         ]);
@@ -28,16 +27,6 @@ class AdminController extends Controller
         if ($validator->fails()) {
             return redirect()->route('admin.general')
                 ->withErrors($validator)
-                ->withInput();
-        }
-
-        $url = $request->azuriom_url . '/api/rss';
-        $headers = @get_headers($url);
-
-        // Vérifier si l'URL est valide
-        if (!$headers || strpos($headers[0], '200') === false) {
-            return redirect()->route('admin.general')
-                ->withErrors(['azuriom_url' => 'L\'URL Azuriom n\'est pas valide. Vérifiez que cela correspond à l\'URL de votre site Azuriom, sans slash à la fin.'])
                 ->withInput();
         }
 

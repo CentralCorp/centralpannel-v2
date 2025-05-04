@@ -20,6 +20,7 @@ class OptionsGeneral extends Model
         'role_display',
         'money_display',
         'azuriom_url',
+        'azuriom_api_key',
         'min_ram',
         'max_ram',
     ];

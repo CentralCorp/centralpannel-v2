@@ -11,9 +11,16 @@ class OptionsServer extends Model
 
     protected $table = 'options_server';
     protected $fillable = [
+        'server_id',
         'server_name',
         'server_ip',
         'server_port',
-        'icon'
+        'icon',
+        'type',
+        'is_default'
+    ];
+
+    protected $casts = [
+        'is_default' => 'boolean'
     ];
 }
