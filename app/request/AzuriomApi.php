@@ -41,12 +41,20 @@ class AzuriomApi
 
     public function getRoles()
     {
-        return $this->makeRequest('/api/apiextender/roles');
+        $response = $this->makeRequest('/api/apiextender/roles');
+        if ($response->successful()) {
+            return $response->json();
+        }
+        return [];
     }
 
     public function getUsers()
     {
-        return $this->makeRequest('/api/apiextender/users');    
+        $response = $this->makeRequest('/api/apiextender/users');
+        if ($response->successful()) {
+            return $response->json();
+        }
+        return [];
     }
 
     public function getMoney()

@@ -20,15 +20,51 @@
                         <input type="checkbox" id="whitelist" name="whitelist" class="form-check-input" value="1" {{ ($securityOptions->whitelist ?? false) ? 'checked' : '' }}>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="whitelist_users" class="form-label">Ajouter des utilisateurs (séparés par des virgules)</label>
-                        <input type="text" class="form-control" id="whitelist_users" name="whitelist_users" placeholder="Utilisateur1, Utilisateur2">
-                    </div>
+                    @if(isset($azuriomUsers) && count($azuriomUsers) > 0)
+                        <div class="mb-3">
+                            <label class="form-label">Sélectionner des utilisateurs</label>
+                            <div class="row" id="userList">
+                                @foreach($azuriomUsers as $user)
+                                    @if(!$user['is_banned'])
+                                        <div class="col-md-4 mb-2 user-item">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="whitelist_users[]" value="{{ $user['name'] }}" id="user_{{ $user['id'] }}">
+                                                <label class="form-check-label" for="user_{{ $user['id'] }}">
+                                                    <span class="user-name">{{ $user['name'] }}</span>
+                                                    <span style="color: {{ $user['role']['color'] }};">({{ $user['role']['name'] }})</span>
+                                                    @if($user['role']['is_admin'])
+                                                        <span class="badge bg-danger">Admin</span>
+                                                    @endif
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
-                    <div class="mb-3">
-                        <label for="whitelist_roles" class="form-label">Ajouter des rôles (séparés par des virgules)</label>
-                        <input type="text" class="form-control" id="whitelist_roles" name="whitelist_roles" placeholder="Rôle1, Rôle2">
-                    </div>
+                    @if(isset($azuriomRoles) && count($azuriomRoles) > 0)
+                        <div class="mb-3">
+                            <label class="form-label">Sélectionner des rôles Azuriom</label>
+                            <div class="row" id="roleList">
+                                @foreach($azuriomRoles as $role)
+                                    <div class="col-md-4 mb-2 role-item">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="azuriom_roles[]" value="{{ $role['name'] }}" id="role_{{ $role['id'] }}">
+                                            <label class="form-check-label" for="role_{{ $role['id'] }}">
+                                                <span class="role-name" style="color: {{ $role['color'] }};">{{ $role['name'] }}</span>
+                                                @if($role['is_admin'])
+                                                    <span class="badge bg-danger">Admin</span>
+                                                @endif
+                                                <span class="badge bg-secondary">Power: {{ $role['power'] }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                 </form>
