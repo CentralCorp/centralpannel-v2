@@ -13,7 +13,9 @@ use App\Http\Controllers\AdminIgnoreController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\AdminConfigController;
+use App\Http\Controllers\users\AdminUserController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\DashboardController;
 
 Auth::routes(['register' => false]);
 
@@ -31,9 +33,7 @@ Route::get('/', function () {
 
 // Routes avec le préfixe 'admin' (groupées)
 Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('admin.index');
-    })->name('admin.index');
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
 
     Route::get('/config', [AdminConfigController::class, 'show'])->name('admin.config');
     Route::post('/config', [AdminConfigController::class, 'update'])->name('admin.config.update');
@@ -67,10 +67,18 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('/loader', [AdminLoaderController::class, 'index'])->name('admin.loader');
     Route::post('/loader/update', [AdminLoaderController::class, 'update'])->name('admin.loader.update');
-    Route::get('/loader/builds', [AdminLoaderController::class, 'getForgeBuilds'])->name('admin.loader.builds');
+    Route::get('/loader/builds/', [AdminLoaderController::class, 'getForgeBuilds'])->name('admin.loader.builds');
+    Route::get('/loader/fabric-versions', [AdminLoaderController::class, 'getFabricVersions'])->name('admin.loader.fabric-versions');
 
     Route::get('/rpc', [AdminRpcController::class, 'show'])->name('admin.rpc');
     Route::post('/rpc/update', [AdminRpcController::class, 'update'])->name('admin.rpc.update');
+
+    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
+    Route::get('/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
+    Route::post('/users/add', [AdminUserController::class, 'add'])->name('admin.users.add');
+    Route::delete('/users/delete/{id}', [AdminUserController::class, 'delete'])->name('admin.users.delete');
+    Route::get('/users/edit/{id}', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/update/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
 });
 
 // Routes sans le préfixe 'admin'

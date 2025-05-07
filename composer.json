@@ -9,7 +9,8 @@
         "alexusmai/laravel-file-manager": "^3.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "laravel/ui": "^4.6"
+        "laravel/ui": "^4.6",
+        "simplepie/simplepie": "^1.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

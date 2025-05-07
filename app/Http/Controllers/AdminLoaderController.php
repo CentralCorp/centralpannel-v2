@@ -61,5 +61,17 @@ class AdminLoaderController extends Controller
 
         return response()->json(['builds' => $builds]);
     }
+    public function getFabricVersions()
+    {
+        $url = 'https://meta.fabricmc.net/v2/versions/loader';
+        $response = Http::get($url);
+        $versions = [];
+
+        if ($response->successful()) {
+            $versions = $response->json();
+        }
+
+        return response()->json(['versions' => $versions]);
+    }
 }
 

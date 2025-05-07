@@ -32,22 +32,33 @@
 <div class="wrapper">
     <nav id="sidebar" class="sidebar js-sidebar">
         <div class="sidebar-content js-simplebar">
-            <a class="sidebar-brand text-white" href="/admin">
-                <span class="align-middle">Admin Panel</span>
+            <a class="sidebar-brand text-white" href="{{ route('admin.index') }}">
+                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="sidebar-brand-img">
             </a>
+            <a class="sidebar-link {{ request()->routeIs('admin.index') ? 'active' : '' }}" href="{{ route('admin.index') }}">
+                        <i class="bi bi-house align-middle"></i> <span class="align-middle">Home</span>
+                    </a>
             <ul class="sidebar-nav">
-
+                <li class="sidebar-header">
+                        Pannel
+                    </li>
+                    <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->routeIs('admin.users') ? 'active' : '' }}" href="{{ route('admin.users') }}">
+                        <i class="bi bi-people align-middle"></i> <span class="align-middle">Users</span>
+                    </a>
+                </li>
                 <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.config') ? 'active' : '' }}" href="{{ route('admin.config') }}">
                         <i class="bi bi-gear align-middle"></i> <span class="align-middle">Config</span>
                     </a>
                 </li>
+                <li class="sidebar-header">
+                    Configuration
+                </li>
                 
-
-
                 <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.general') ? 'active' : '' }}" href="{{ route('admin.general') }}">
-                        <i class="bi bi-gear align-middle"></i> <span class="align-middle">General</span>
+                        <i class="bi bi-sliders align-middle"></i> <span class="align-middle">General</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -56,25 +67,30 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->routeIs('admin.server') ? 'active' : '' }}" href="{{ route('admin.server') }}">
+                        <i class="bi bi-hdd align-middle"></i> <span class="align-middle">Server</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-header">
+                    Sécurité
+                </li>
+                <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.security') ? 'active' : '' }}" href="{{ route('admin.security') }}">
                         <i class="bi bi-lock align-middle"></i> <span class="align-middle">Security</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('admin.server') ? 'active' : '' }}" href="{{ route('admin.server') }}">
-                        <i class="bi bi-hdd align-middle"></i> <span class="align-middle">Server</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('admin.ui') ? 'active' : '' }}" href="{{ route('admin.ui') }}">
-                        <i class="bi bi-display align-middle"></i> <span class="align-middle">UI</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.whitelist') ? 'active' : '' }}" href="{{ route('admin.whitelist') }}">
-                        <i class="bi bi-list align-middle"></i> <span class="align-middle">Whitelist</span>
+                        <i class="bi bi-list-check align-middle"></i> <span class="align-middle">Whitelist</span>
                     </a>
                 </li>
+                
+
+                <li class="sidebar-header">
+                    Client
+                </li>
+                
                 <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.mods') ? 'active' : '' }}" href="{{ route('admin.mods') }}">
                         <i class="bi bi-box align-middle"></i> <span class="align-middle">Mods optionnels</span>
@@ -88,6 +104,15 @@
                 <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.ignore') ? 'active' : '' }}" href="{{ route('admin.ignore') }}">
                         <i class="bi bi-slash align-middle"></i> <span class="align-middle">Ignore</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-header">
+                    Interface
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->routeIs('admin.ui') ? 'active' : '' }}" href="{{ route('admin.ui') }}">
+                        <i class="bi bi-display align-middle"></i> <span class="align-middle">UI</span>
                     </a>
                 </li>
             </ul>
@@ -151,6 +176,12 @@
                 @yield('content')
             </div>
         </main>
+        <footer class="bg-body-secondary py-4 mt-4">
+                <div class="text-center">
+                    <p class="mb-0">© 2025 CentralCorp. Tous droits réservés.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 </div>
 

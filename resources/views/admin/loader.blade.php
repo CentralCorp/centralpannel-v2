@@ -1,131 +1,142 @@
 @extends('layouts.admin')
 
 @section('title', 'Paramètres du Loader')
+@section('page-title', 'Paramètres du Loader')
 
 @section('content')
-    <div class="alert alert-success" role="alert" style="display: {{ session('success') ? 'block' : 'none' }};">
-        {{ session('success') }}
-    </div>
+<div class="container-fluid px-4 py-3">
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
     @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
-    <div class="card shadow mb-4">
+    <div class="card shadow-sm border-0">
         <div class="card-body">
             <form method="POST" action="{{ route('admin.loader.update') }}">
                 @csrf
 
                 <div class="mb-3">
-                    <label for="minecraft_version" class="form-label">Version de Minecraft :</label>
-                    <input type="text" class="form-control" id="minecraft_version" name="minecraft_version" placeholder="Version MC au format X.XX.X" value="{{ old('minecraft_version', $row->minecraft_version ?? '') }}">
+                    <label for="minecraft_version" class="form-label fw-semibold">Version de Minecraft</label>
+                    <input type="text" class="form-control" id="minecraft_version" name="minecraft_version" placeholder="ex: 1.20.1" value="{{ old('minecraft_version', $row->minecraft_version ?? '') }}">
+                </div>
+
+                <div class="form-check form-switch mb-3">
+                    <input type="hidden" name="loader_activation" value="0">
+                    <input type="checkbox" class="form-check-input" id="loader-activation" name="loader_activation" value="1" {{ ($row->loader_activation ?? false) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="loader-activation">Activer le loader</label>
                 </div>
 
                 <div class="mb-3">
-                    <div class="form-check form-switch">
-                        <label for="loader-activation" class="form-label">Activer le loader</label>
-                        <input type="hidden" name="loader_activation" value="0">
-                        <input type="checkbox" id="loader-activation" name="loader_activation" class="form-check-input" value="1" {{ ($row->loader_activation ?? false) ? 'checked' : '' }}>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="loader-type" class="form-label">Type de Loader :</label>
+                    <label for="loader-type" class="form-label fw-semibold">Type de Loader</label>
                     <select class="form-select" id="loader-type" name="loader_type">
-                        <option value="forge" {{ (isset($row) && $row->loader_type == 'forge') ? 'selected' : '' }}>Forge</option>
-                        <option value="fabric" {{ (isset($row) && $row->loader_type == 'fabric') ? 'selected' : '' }}>Fabric</option>
-                        <option value="legacyfabric" {{ (isset($row) && $row->loader_type == 'legacyfabric') ? 'selected' : '' }}>LegacyFabric</option>
-                        <option value="neoForge" {{ (isset($row) && $row->loader_type == 'neoForge') ? 'selected' : '' }}>NeoForge</option>
-                        <option value="quilt" {{ (isset($row) && $row->loader_type == 'quilt') ? 'selected' : '' }}>Quilt</option>
+                        @foreach (['forge', 'fabric', 'legacyfabric', 'neoForge', 'quilt'] as $type)
+                            <option value="{{ $type }}" {{ (isset($row) && $row->loader_type === $type) ? 'selected' : '' }}>
+                                {{ ucfirst($type) }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
-                <div class="mb-3">
-                    <label for="loader-build-version" class="form-label">Version de Build du loader :</label>
-                    <select class="form-select" id="loader-build-version" name="loader_forge_version" style="display:none;">
-                    </select>
-                    <input type="text" class="form-control" id="loader-build-version-input" name="loader_build_version" style="display:none;" value="{{ old('loader_build_version', $row->loader_build_version ?? '') }}">
+                <div class="mb-4">
+                    <label for="loader-build-version" class="form-label fw-semibold">Version de Build</label>
+                    <select class="form-select" id="loader-build-version" name="loader_forge_version"></select>
+                    <input type="text" class="form-control d-none" id="loader-build-version-input" name="loader_build_version" value="{{ old('loader_build_version', $row->loader_build_version ?? '') }}">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <button type="submit" class="btn btn-primary btn-sm rounded-2">Enregistrer</button>
             </form>
         </div>
     </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const loaderTypeSelect = document.getElementById('loader-type');
-            const mcVersionInput = document.getElementById('minecraft_version');
-            const loaderBuildVersionSelect = document.getElementById('loader-build-version');
-            const loaderBuildVersionInput = document.getElementById('loader-build-version-input');
-            const loaderForgeVersion = "{{ $row->loader_forge_version ?? '' }}";
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loaderType = document.getElementById('loader-type');
+        const mcVersion = document.getElementById('minecraft_version');
+        const buildSelect = document.getElementById('loader-build-version');
+        const buildInput = document.getElementById('loader-build-version-input');
+        const currentVersion = "{{ $row->loader_forge_version ?? '' }}";
 
-            function fetchForgeBuildVersions(mcVersion) {
-                const apiUrl = `/admin/loader/builds?loader=forge&mc_version=${mcVersion}`;
+        function toggleBuildInputs(showSelect) {
+            buildSelect.classList.toggle('d-none', !showSelect);
+            buildInput.classList.toggle('d-none', showSelect);
+        }
 
-                fetch(apiUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        updateLoaderBuildVersions(data.builds);
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la récupération des versions de build:', error);
+        function loadForgeBuilds(version) {
+            const url = `/admin/loader/builds?mc_version=${version}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    buildSelect.innerHTML = '';
+                    data.builds.forEach(build => {
+                        const option = document.createElement('option');
+                        option.value = build;
+                        option.text = build;
+                        if (build === currentVersion) option.selected = true;
+                        buildSelect.appendChild(option);
                     });
-            }
+                    toggleBuildInputs(true);
+                })
+                .catch(err => console.error('Erreur de chargement Forge:', err));
+        }
 
-            function updateLoaderBuildVersions(builds) {
-                loaderBuildVersionSelect.innerHTML = '';
+        function loadFabricVersions() {
+            fetch('/admin/loader/fabric-versions')
+                .then(response => response.json())
+                .then(data => {
+                    buildSelect.innerHTML = '';
+                    data.versions.forEach(version => {
+                        const option = document.createElement('option');
+                        option.value = version.version;
+                        option.text = version.version;
+                        if (version.version === currentVersion) option.selected = true;
+                        buildSelect.appendChild(option);
+                    });
+                    toggleBuildInputs(true);
+                })
+                .catch(err => console.error('Erreur de chargement Fabric:', err));
+        }
 
-                builds.forEach(build => {
-                    const option = document.createElement('option');
-                    option.value = build;
-                    option.textContent = build;
-                    if (build === loaderForgeVersion) {
-                        option.selected = true;
-                    }
-                    loaderBuildVersionSelect.appendChild(option);
-                });
-                if (loaderTypeSelect.value === 'forge') {
-                    loaderBuildVersionSelect.style.display = 'block';
-                    loaderBuildVersionInput.style.display = 'none';
-                } else {
-                    loaderBuildVersionSelect.style.display = 'none';
-                    loaderBuildVersionInput.style.display = 'block';
-                }
-            }
-
-            loaderTypeSelect.addEventListener('change', function() {
-                if (loaderTypeSelect.value === 'forge') {
-                    const mcVersion = mcVersionInput.value;
-                    fetchForgeBuildVersions(mcVersion);
-                    loaderBuildVersionSelect.style.display = 'block';
-                    loaderBuildVersionInput.style.display = 'none';
-                } else {
-                    loaderBuildVersionSelect.style.display = 'none';
-                    loaderBuildVersionInput.style.display = 'block';
-                }
-            });
-
-            mcVersionInput.addEventListener('change', function() {
-                if (loaderTypeSelect.value === 'forge') {
-                    fetchForgeBuildVersions(mcVersionInput.value);
-                }
-            });
-
-            if (loaderTypeSelect.value === 'forge') {
-                fetchForgeBuildVersions(mcVersionInput.value);
-                loaderBuildVersionSelect.style.display = 'block';
-                loaderBuildVersionInput.style.display = 'none';
-            } else {
-                loaderBuildVersionSelect.style.display = 'none';
-                loaderBuildVersionInput.style.display = 'block';
+        loaderType.addEventListener('change', () => {
+            switch(loaderType.value) {
+                case 'forge':
+                    loadForgeBuilds(mcVersion.value);
+                    break;
+                case 'fabric':
+                    loadFabricVersions();
+                    break;
+                default:
+                    toggleBuildInputs(false);
             }
         });
-    </script>
+
+        mcVersion.addEventListener('input', () => {
+            if (loaderType.value === 'forge') {
+                loadForgeBuilds(mcVersion.value);
+            }
+        });
+
+        // Initialisation
+        if (loaderType.value === 'forge') {
+            loadForgeBuilds(mcVersion.value);
+        } else if (loaderType.value === 'fabric') {
+            loadFabricVersions();
+        } else {
+            toggleBuildInputs(false);
+        }
+    });
+</script>
 @endsection
