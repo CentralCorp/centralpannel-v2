@@ -10,12 +10,16 @@ use App\Http\Controllers\AdminUIController;
 use App\Http\Controllers\AdminWhitelistController;
 use App\Http\Controllers\AdminLoaderController;
 use App\Http\Controllers\AdminIgnoreController;
-use App\Http\Controllers\FileController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\AdminConfigController;
 use App\Http\Controllers\users\AdminUserController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\SettingsExportController;
+
+use App\Http\Controllers\api\ApiController;
+use App\Http\Controllers\api\FileController;
+use App\Http\Controllers\api\ModController;
 
 Auth::routes(['register' => false]);
 
@@ -79,6 +83,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::delete('/users/delete/{id}', [AdminUserController::class, 'delete'])->name('admin.users.delete');
     Route::get('/users/edit/{id}', [AdminUserController::class, 'edit'])->name('admin.users.edit');
     Route::put('/users/update/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
+
+    Route::get('/settings/export', [SettingsExportController::class, 'export'])->name('admin.settings.export');
+    Route::post('/settings/import', [SettingsExportController::class, 'import'])->name('admin.settings.import');
 });
 
 // Routes sans le préfixe 'admin'
@@ -87,5 +94,11 @@ Route::get('/file-manager', function () {
     return view('admin.file-manager');
 })->name('admin.file-manager');
 
-// Route pour les fichiers
-Route::get('/files', [FileController::class, 'index']);
+
+
+
+Route::prefix('api')->group(function () {
+    Route::get('/options', [ApiController::class, 'getOptions']);
+    Route::get('/files', [FileController::class, 'index']);
+    Route::get('/mods', [ModController::class, 'index']);
+});

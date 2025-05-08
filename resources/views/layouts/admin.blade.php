@@ -146,7 +146,6 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
                         <li><a class="dropdown-item" href="{{ route('admin.file-manager') }}">Gestionnaire de fichiers</a></li>
-                        <li><a class="dropdown-item" href="#">Gérer les comptes (à venir)</a></li>
                         <li><a class="dropdown-item" href="#">Import/Export (à venir)</a></li>
                     </ul>
                 </div>

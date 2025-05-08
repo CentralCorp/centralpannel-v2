@@ -50,6 +50,51 @@
                 </div>
             </div>
         </div>
+
+        <!-- Export/Import -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Export/Import</h5>
+                    <div class="d-flex flex-column gap-3">
+                        <div>
+                            <h6 class="mb-2">Export des paramètres</h6>
+                            <p class="text-muted small mb-2">Exportez tous les paramètres du panneau d'administration au format .centralcorp</p>
+                            <a href="{{ route('admin.settings.export') }}" class="btn btn-primary">
+                                <i class="fas fa-download me-2"></i>Exporter (.centralcorp)
+                            </a>
+                        </div>
+                        <div>
+                            <h6 class="mb-2">Import des paramètres</h6>
+                            <p class="text-muted small mb-2">Importez des paramètres depuis un fichier .centralcorp</p>
+                            <form action="{{ route('admin.settings.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="input-group">
+                                    <input type="file" class="form-control" name="settings_file" accept=".centralcorp" required>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-upload me-2"></i>Importer
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show position-fixed bottom-0 end-0 m-3" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show position-fixed bottom-0 end-0 m-3" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 @endsection
