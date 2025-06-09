@@ -16,7 +16,7 @@ use App\Http\Controllers\users\AdminUserController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsExportController;
-
+use App\Http\Controllers\AdminBgController;
 use App\Http\Controllers\api\ApiController;
 use App\Http\Controllers\api\FileController;
 use App\Http\Controllers\api\ModController;
@@ -86,6 +86,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('/settings/export', [SettingsExportController::class, 'export'])->name('admin.settings.export');
     Route::post('/settings/import', [SettingsExportController::class, 'import'])->name('admin.settings.import');
+
+    Route::get('/bg', [AdminBgController::class, 'index'])->name('admin.bg');
+    Route::post('/bg/update', [AdminBgController::class, 'update'])->name('admin.bg.update');
 });
 
 // Routes sans le préfixe 'admin'

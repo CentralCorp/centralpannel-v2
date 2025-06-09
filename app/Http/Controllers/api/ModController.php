@@ -2,36 +2,33 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Mod;
+use App\Models\OptionsMods;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
 class ModController extends Controller
 {
-    public function index(): JsonResponse
+    public function getMods(): JsonResponse
     {
-        $mods = Mod::all();
+        $mods = OptionsMods::all();
 
         $modsData = [];
         $optionalMods = [];
 
         foreach ($mods as $mod) {
-            $modsId = $mod->id;
-            $modsName = $mod->name;
-            $modsDescription = $mod->description;
             $modsFile = basename($mod->file);
-
             $modsIcon = !empty($mod->icon) ? $this->getAbsoluteUrl($mod->icon) : "";
-            $isRecommended = !empty($mod->recommended) && $mod->recommended == 1;
 
             $modsData[$modsFile] = [
-                "name" => $modsName,
-                "description" => $modsDescription,
+                "name" => $mod->name,
+                "description" => $mod->description,
                 "icon" => $modsIcon,
-                "recommanded" => $isRecommended
+                "recommanded" => (bool)$mod->recommended
             ];
 
-            $optionalMods[] = $modsFile;
+            if ($mod->optional) {
+                $optionalMods[] = $modsFile;
+            }
         }
 
         $output = [
@@ -41,10 +38,10 @@ class ModController extends Controller
 
         return response()->json($output, 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
+
     private function getAbsoluteUrl($imagePath)
     {
         $relativeUrl = Storage::disk('public')->url($imagePath);
-
         return url($relativeUrl);
     }
 }
