@@ -35,9 +35,6 @@
             <a class="sidebar-brand text-white" href="{{ route('admin.index') }}">
                 <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="sidebar-brand-img">
             </a>
-            <a class="sidebar-link {{ request()->routeIs('admin.index') ? 'active' : '' }}" href="{{ route('admin.index') }}">
-                        <i class="bi bi-house align-middle"></i> <span class="align-middle">Home</span>
-                    </a>
             <ul class="sidebar-nav">
                 <li class="sidebar-header">
                         Pannel
@@ -50,6 +47,11 @@
                 <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.config') ? 'active' : '' }}" href="{{ route('admin.config') }}">
                         <i class="bi bi-gear align-middle"></i> <span class="align-middle">Config</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->routeIs('admin.file-manager') ? 'active' : '' }}" href="{{ route('admin.file-manager') }}">
+                        <i class="bi bi-folder align-middle"></i> <span class="align-middle">File Manager</span>
                     </a>
                 </li>
                 <li class="sidebar-header">
@@ -145,15 +147,6 @@
                 <button class="btn btn-outline-secondary" id="themeToggle" data-bs-toggle="tooltip" data-bs-placement="bottom" aria-label="Thème sombre" data-bs-original-title="Thème sombre">
                     <i id="themeIcon" class="bi bi-moon-stars"></i>
                 </button>
-                <div class="dropdown ms-2">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Paramètres
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
-                        <li><a class="dropdown-item" href="{{ route('admin.file-manager') }}">Gestionnaire de fichiers</a></li>
-                        <li><a class="dropdown-item" href="#">Import/Export (à venir)</a></li>
-                    </ul>
-                </div>
                 <div class="dropdown ms-2">
                     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         {{ Auth::user()->name }}
