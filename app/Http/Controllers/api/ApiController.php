@@ -72,6 +72,7 @@ class ApiController extends Controller
             "role" => $general ? (bool)$general->role_display : true,
             "splash" => $ui ? $ui->splash : "Ceci est du code",
             "splash_author" => $ui ? $ui->splash_author : "Riptiaz",
+            "azauth" => $general ? $general->azuriom_url : null,
             "rpc_activation" => $rpc ? (bool)$rpc->rpc_activation : true,
             "rpc_id" => $rpc ? $rpc->rpc_id : "114425717056158109",
             "rpc_details" => $rpc ? $rpc->rpc_details : "Dans le launcher 👀",

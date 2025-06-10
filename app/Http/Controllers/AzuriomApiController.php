@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\RequestApi\AzuriomApi;
+use App\Request\AzuriomApi;
 use Illuminate\Http\Request;
 
 class AzuriomApiController extends Controller
