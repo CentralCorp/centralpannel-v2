@@ -21,6 +21,7 @@ use App\Http\Controllers\api\ApiController;
 use App\Http\Controllers\api\FileController;
 use App\Http\Controllers\api\ModController;
 
+
 Auth::routes(['register' => false]);
 
 // Routes d'installation
@@ -97,11 +98,8 @@ Route::get('/file-manager', function () {
     return view('admin.file-manager');
 })->name('admin.file-manager');
 
-
-
-
-Route::prefix('api')->group(function () {
-    Route::get('/options', [ApiController::class, 'getOptions']);
-    Route::get('/files', [FileController::class, 'index']);
-    Route::get('/mods', [ModController::class, 'index']);
+Route::prefix('utils')->group(function () {
+    Route::get('/api', [ApiController::class, 'getOptions']);
+    Route::get('/mods', [ModController::class, 'getMods']);
 });
+Route::get('/data', [FileController::class, 'getFiles']);

@@ -39,10 +39,10 @@ class AdminModController extends Controller
         $mod->recommended = $request->has('optional_recommended') ? 1 : 0;
 
         if ($request->hasFile('optional_image')) {
-            if ($mod->icon && Storage::disk('uploads')->exists($mod->icon)) {
-                Storage::disk('uploads')->delete($mod->icon);
+            if ($mod->icon && Storage::disk('public')->exists($mod->icon)) {
+                Storage::disk('public')->delete($mod->icon);
             }
-            $mod->icon = $request->file('optional_image')->store('mods_icons', 'uploads');
+            $mod->icon = $request->file('optional_image')->store('mod_icon', 'public');
         }
 
         $mod->save();

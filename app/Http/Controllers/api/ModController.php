@@ -41,8 +41,7 @@ class ModController extends Controller
 
     private function getAbsoluteUrl($imagePath)
     {
-        $relativeUrl = Storage::disk('public')->url($imagePath);
-        return url($relativeUrl);
+        return asset('storage/' . $imagePath);
     }
 }
 

@@ -115,7 +115,7 @@
                     fileInput.value = data.file;
                     nameInput.value = data.name;
                     descriptionInput.value = data.description;
-                    currentImage.src = '/storage/uploads/' + data.icon;
+                    currentImage.src = '/storage/' + data.icon;
                     currentImage.classList.remove('d-none');
                     recommendedCheckbox.checked = data.recommended;
 
