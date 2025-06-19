@@ -43,7 +43,7 @@
                     <div class="mb-3">
                         <label for="azuriom_api_key" class="form-label">Clé API Azuriom</label>
                         <input type="text" class="form-control" id="azuriom_api_key" name="azuriom_api_key" 
-                               placeholder="Votre clé API Azuriom" 
+                               placeholder="Votre clé API Azuriom (plugin API Extender)" 
                                value="{{ $options->azuriom_api_key ?? '' }}" required>
                         <small class="form-text text-muted">La clé API est nécessaire pour la synchronisation avec Azuriom.</small>
                     </div>

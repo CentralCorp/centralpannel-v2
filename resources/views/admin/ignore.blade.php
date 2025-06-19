@@ -36,7 +36,7 @@
                     @foreach($folders as $folder)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span class="text-break">{{ $folder->folder_name }}</span>
-                            <form action="{{ route('admin.ignore.destroyFolder', $folder->id) }}" method="POST" onsubmit="return confirm('Supprimer cet élément ?');">
+                            <form action="{{ route('admin.ignore.destroyFolder', $folder->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>

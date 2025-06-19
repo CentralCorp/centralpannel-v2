@@ -37,7 +37,7 @@
             </a>
             <ul class="sidebar-nav">
                 <li class="sidebar-header">
-                        Pannel
+                        Panel
                     </li>
                     <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('admin.users') ? 'active' : '' }}" href="{{ route('admin.users') }}">
