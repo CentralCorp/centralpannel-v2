@@ -21,7 +21,7 @@ class MarketApi
             throw new \RuntimeException('La clé API Market doit être configurée dans les paramètres généraux.');
         }
 
-        $this->baseUrl = 'http://localhost:8000'; // URL de base du marketplace
+        $this->baseUrl = 'https://market.vexato.tech'; // URL de base du marketplace
         $this->apiKey = $options->market_api_key;
     }
 
