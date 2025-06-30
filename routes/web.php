@@ -51,7 +51,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('/server', [AdminServerController::class, 'show'])->name('admin.server');
     Route::post('/server/update', [AdminServerController::class, 'update'])->name('admin.server.update');
-    Route::post('/admin/server/set-default', [AdminServerController::class, 'setDefaultServer'])->name('admin.server.set-default');
+    Route::post('/server/set-default', [AdminServerController::class, 'setDefaultServer'])->name('admin.server.set-default');
 
     Route::get('/ui', [AdminUIController::class, 'show'])->name('admin.ui');
     Route::post('/ui/update', [AdminUIController::class, 'update'])->name('admin.ui.update');

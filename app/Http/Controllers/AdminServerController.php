@@ -38,6 +38,9 @@ class AdminServerController extends Controller
                 $servers = $serversResponse->json();
                 
                 // Synchroniser les serveurs dans la base de données
+                $isFirstServer = true;
+                $hasDefaultServer = OptionsServer::where('is_default', true)->exists();
+                
                 foreach ($servers as $server) {
                     $serverModel = OptionsServer::updateOrCreate(
                         ['server_id' => $server['id']],
@@ -50,13 +53,15 @@ class AdminServerController extends Controller
                         ]
                     );
 
-                    // Si c'est le premier serveur et qu'aucun n'est par défaut, le définir comme par défaut
-                    if (count($servers) === 1 && !OptionsServer::where('is_default', true)->exists()) {
+                    // Si aucun serveur n'est par défaut, définir le premier comme par défaut
+                    if (!$hasDefaultServer && $isFirstServer) {
                         $serverModel->is_default = true;
                         $serverModel->save();
+                        $hasDefaultServer = true;
                     }
 
                     $defaultServers[$server['id']] = $serverModel->is_default;
+                    $isFirstServer = false;
                 }
             }
         } catch (\RuntimeException $e) {
@@ -102,16 +107,36 @@ class AdminServerController extends Controller
             'server_id' => 'required|integer'
         ]);
 
+        \Log::info('Tentative de définition du serveur par défaut', ['server_id' => $request->server_id]);
+
         // Mettre à jour tous les serveurs pour désélectionner le serveur par défaut
-        OptionsServer::where('is_default', true)->update(['is_default' => false]);
+        $updatedCount = OptionsServer::where('is_default', true)->update(['is_default' => false]);
+        \Log::info('Serveurs désélectionnés', ['count' => $updatedCount]);
 
         // Mettre à jour le serveur sélectionné comme serveur par défaut
         $server = OptionsServer::where('server_id', $request->server_id)->first();
         if ($server) {
             $server->is_default = true;
-            $server->save();
+            $saved = $server->save();
+            
+            \Log::info('Serveur par défaut mis à jour', [
+                'server_id' => $request->server_id, 
+                'server_name' => $server->server_name,
+                'saved' => $saved,
+                'is_default' => $server->is_default
+            ]);
+            
+            // Vérification supplémentaire
+            $verification = OptionsServer::where('server_id', $request->server_id)->first();
+            \Log::info('Vérification après sauvegarde', [
+                'server_id' => $verification->server_id,
+                'is_default' => $verification->is_default
+            ]);
+            
+            return redirect()->route('admin.server')->with('success', "Le serveur \"{$server->server_name}\" a été défini comme serveur par défaut.");
         }
 
-        return response()->json(['success' => true]);
+        \Log::error('Serveur non trouvé', ['server_id' => $request->server_id]);
+        return redirect()->route('admin.server')->with('error', 'Serveur non trouvé.');
     }
 }

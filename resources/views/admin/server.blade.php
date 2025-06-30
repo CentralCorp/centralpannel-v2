@@ -10,6 +10,22 @@
     <div class="container-fluid p-0">
         <h2 class="mb-4 fw-bold">Liste des serveurs Azuriom</h2>
 
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         @if($error)
             <div class="alert alert-danger d-flex align-items-center">
                 <i class="fas fa-exclamation-triangle me-2"></i> {{ $error }}
@@ -33,43 +49,55 @@
                             <table class="table table-bordered align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="text-center" style="width: 70px;">Défaut</th>
                                         <th>Nom</th>
                                         <th>Adresse</th>
                                         <th>Port</th>
                                         <th>Type</th>
                                         <th>Icône</th>
+                                        <th class="text-center" style="width: 150px;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($servers as $server)
                                         <tr>
-                                            <td class="text-center">
-                                                <div class="form-check">
-                                                    <input class="form-check-input server-default" 
-                                                           type="radio" 
-                                                           name="default_server" 
-                                                           value="{{ $server['id'] }}"
-                                                           data-server-id="{{ $server['id'] }}"
-                                                           {{ $defaultServers[$server['id']] ?? false ? 'checked' : '' }}>
-                                                </div>
-                                            </td>
-                                            <td>{{ $server['name'] }}</td>
+                                            <td><strong>{{ $server['name'] }}</strong></td>
                                             <td><code>{{ $server['address'] }}</code></td>
                                             <td>{{ $server['port'] }}</td>
-                                            <td><span class="badge bg-secondary">{{ $server['type'] }}</span></td>
+                                            <td><span class="badge bg-info">{{ $server['type'] }}</span></td>
                                             <td>
                                                 @if($server['icon'])
                                                     <img src="{{ rtrim($options->azuriom_url, '/') . $server['icon'] }}" 
                                                          alt="Icône du serveur" 
                                                          class="img-thumbnail rounded-circle" 
-                                                         style="max-width: 50px; max-height: 50px;">
+                                                         style="max-width: 40px; max-height: 40px;">
+                                                @else
+                                                    <span class="text-muted">Aucune</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if(!($defaultServers[$server['id']] ?? false))
+                                                    <form method="POST" action="{{ route('admin.server.set-default') }}" style="display: inline;" class="set-default-form">
+                                                        @csrf
+                                                        <input type="hidden" name="server_id" value="{{ $server['id'] }}">
+                                                        <button type="submit" class="btn btn-sm btn-primary">
+                                                            <i class="bi bi-star"></i> Définir par défaut
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <span class="text-success fw-bold">
+                                                        <i class="bi bi-check-circle-fill"></i> Serveur par défaut
+                                                    </span>
                                                 @endif
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Information :</strong> Le serveur par défaut sera utilisé comme serveur principal pour toutes les connexions et opérations du launcher.
                         </div>
                     @endif
                 </div>
@@ -81,29 +109,23 @@
         @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('.server-default').forEach(radio => {
-                    radio.addEventListener('change', function () {
-                        const serverId = this.dataset.serverId;
-
-                        fetch('/admin/server/set-default', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                            },
-                            body: JSON.stringify({ server_id: serverId })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                console.log('Serveur par défaut mis à jour');
-                            } else {
-                                alert('Échec de la mise à jour du serveur par défaut.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Erreur:', error);
-                        });
+                // Gestion des formulaires de définition de serveur par défaut
+                const forms = document.querySelectorAll('.set-default-form');
+                
+                forms.forEach(form => {
+                    form.addEventListener('submit', function(e) {
+                        const serverName = this.closest('tr').querySelector('td:nth-child(2)').textContent.trim();
+                        
+                        // Confirmation simple
+                        if (!confirm(`Êtes-vous sûr de vouloir définir "${serverName}" comme serveur par défaut ?`)) {
+                            e.preventDefault();
+                            return false;
+                        }
+                        
+                        // Afficher un indicateur de chargement
+                        const button = this.querySelector('button');
+                        button.disabled = true;
+                        button.innerHTML = '<i class="bi bi-hourglass-split"></i> En cours...';
                     });
                 });
             });
