@@ -122,6 +122,11 @@
                         <i class="bi bi-image align-middle"></i> <span class="align-middle">Background</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->routeIs('admin.theme.index') ? 'active' : '' }}" href="{{ route('admin.theme.index') }}">
+                        <i class="bi bi-image align-middle"></i> <span class="align-middle">Theme</span>
+                    </a>
+                </li>
             </ul>
 
         </div>

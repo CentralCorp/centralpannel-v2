@@ -47,6 +47,13 @@
                                value="{{ $options->azuriom_api_key ?? '' }}" required>
                         <small class="form-text text-muted">La clé API est nécessaire pour la synchronisation avec Azuriom.</small>
                     </div>
+                    <div class="mb-3">
+                        <label for="market_api_key" class="form-label">Clé API Market</label>
+                        <input type="text" class="form-control" id="market_api_key" name="market_api_key" 
+                               placeholder="Votre clé API Azuriom (plugin API Extender)" 
+                               value="{{ $options->market_api_key ?? '' }}" required>
+                        <small class="form-text text-muted">La clé API est nécessaire pour la synchronisation avec Market.</small>
+                    </div>
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                 </form>
             </div>

@@ -19,14 +19,16 @@ class AdminConfigController extends Controller
         $validated = $request->validate([
             'app_name' => 'required|string|max:255',
             'azuriom_url' => 'required|url',
-            'azuriom_api_key' => 'required|string|min:32|max:255'
+            'azuriom_api_key' => 'required|string|min:32|max:255',
+            'market_api_key' => 'required|string|min:32|max:255'
         ]);
 
         // Mettre à jour les options dans la base de données
         $options = OptionsGeneral::firstOrNew([]);
         $options->fill([
             'azuriom_url' => $validated['azuriom_url'],
-            'azuriom_api_key' => $validated['azuriom_api_key']
+            'azuriom_api_key' => $validated['azuriom_api_key'],
+            'market_api_key' => $validated['market_api_key']
         ]);
         $options->save();
 

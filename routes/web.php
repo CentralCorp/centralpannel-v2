@@ -16,6 +16,7 @@ use App\Http\Controllers\users\AdminUserController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsExportController;
+use App\Http\Controllers\Admin\ThemeController;
 use App\Http\Controllers\AdminBgController;
 use App\Http\Controllers\api\ApiController;
 use App\Http\Controllers\api\FileController;
@@ -90,6 +91,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::get('/bg', [AdminBgController::class, 'index'])->name('admin.bg');
     Route::post('/bg/update', [AdminBgController::class, 'update'])->name('admin.bg.update');
+
+    // Routes pour les thèmes marketplace
+    Route::get('/theme', [ThemeController::class, 'index'])->name('admin.theme.index');
+    Route::post('/theme/download/{id}', [ThemeController::class, 'download'])->name('admin.theme.download');
+    Route::get('/theme/purchase/{id}', [ThemeController::class, 'purchase'])->name('admin.theme.purchase');
+
 });
 
 // Routes sans le préfixe 'admin'
