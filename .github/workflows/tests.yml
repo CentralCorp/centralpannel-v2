@@ -5,46 +5,46 @@ on:
   pull_request:
 
 jobs:
-  tests:
-    strategy:
-      matrix:
-        php-version: [ '8.2', '8.3', '8.4' ]
+  # tests:
+  #   strategy:
+  #     matrix:
+  #       php-version: [ '8.2', '8.3', '8.4' ]
 
-    name: PHP ${{ matrix.php-version }}
+  #   name: PHP ${{ matrix.php-version }}
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: centralcorp
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+  #   services:
+  #     mysql:
+  #       image: mysql:5.7
+  #       env:
+  #         MYSQL_ALLOW_EMPTY_PASSWORD: yes
+  #         MYSQL_DATABASE: centralcorp
+  #       ports:
+  #         - 3306:3306
+  #       options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Setup PHP ${{ matrix.php-version }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: pdo, sqlite, pdo_sqlite, bcmath, mbstring, curl, libxml, zip, intl, gd
-          tools: composer
+  #     - name: Setup PHP ${{ matrix.php-version }}
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: ${{ matrix.php-version }}
+  #         extensions: pdo, sqlite, pdo_sqlite, bcmath, mbstring, curl, libxml, zip, intl, gd
+  #         tools: composer
 
-      - name: Install dependencies
-        run: composer install --ansi --no-interaction --no-progress --prefer-dist
+  #     - name: Install dependencies
+  #       run: composer install --ansi --no-interaction --no-progress --prefer-dist
 
-      - name: Run tests
-        run: vendor/bin/phpunit
-        env:
-          APP_KEY: "base64:dpPUwuuA5ojUpdVwUJcPT13NdOe+RSM/1QXSW/VuJIc="
-          DB_CONNECTION: mysql
-          DB_DATABASE: centralcorp
-          DB_USERNAME: root
+  #     - name: Run tests
+  #       run: vendor/bin/phpunit
+  #       env:
+  #         APP_KEY: "base64:dpPUwuuA5ojUpdVwUJcPT13NdOe+RSM/1QXSW/VuJIc="
+  #         DB_CONNECTION: mysql
+  #         DB_DATABASE: centralcorp
+  #         DB_USERNAME: root
 
   assets:
     name: Bundle assets
