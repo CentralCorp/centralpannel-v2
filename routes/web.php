@@ -14,6 +14,7 @@ use App\Http\Controllers\InstallController;
 use App\Http\Controllers\AdminConfigController;
 use App\Http\Controllers\users\AdminUserController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingsExportController;
 use App\Http\Controllers\Admin\ThemeController;
@@ -26,11 +27,19 @@ use App\Http\Controllers\api\ModController;
 Auth::routes(['register' => false]);
 
 // Routes d'installation
-Route::get('/install', [InstallController::class, 'show'])->name('install.show');
-Route::post('/install', [InstallController::class, 'install'])->name('install.process');
+Route::get('/install', [InstallController::class, 'showDatabase'])->name('install.database');
+Route::post('/install/database', [InstallController::class, 'database'])->name('install.database.store');
+Route::get('/install/admin', [InstallController::class, 'showAdmin'])->name('install.admin');
+Route::post('/install/admin', [InstallController::class, 'install'])->name('install.admin.store');
+Route::get('/install/finish', [InstallController::class, 'finish'])->name('install.finish');
 
 // Redirection de la route racine vers la page de connexion ou admin selon l'état de connexion
 Route::get('/', function () {
+    // Vérifier si l'installation est terminée
+    if (!File::exists(storage_path('installed')) || config('app.key') === \App\Http\Controllers\InstallController::TEMP_KEY) {
+        return redirect()->route('install.database');
+    }
+    
     if (Auth::check()) {
         return redirect()->route('admin.index');
     }

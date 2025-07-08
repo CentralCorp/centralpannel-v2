@@ -47,14 +47,14 @@ return new class extends Migration {
             $table->id();
             $table->boolean('rpc_activation')->default(1);
             $table->string('rpc_id', 100)->nullable();
-            $table->text('rpc_details')->nullable()->default(''); // Valeur par défaut
-            $table->text('rpc_state')->nullable()->default(''); // Valeur par défaut
-            $table->text('rpc_large_text')->nullable()->default(''); // Valeur par défaut
-            $table->text('rpc_small_text')->nullable()->default(''); // Valeur par défaut
-            $table->text('rpc_button1')->nullable()->default(''); // Valeur par défaut
-            $table->text('rpc_button1_url')->nullable()->default(''); // Valeur par défaut
-            $table->text('rpc_button2')->nullable()->default(''); // Valeur par défaut
-            $table->text('rpc_button2_url')->nullable()->default(''); // Valeur par défaut
+            $table->text('rpc_details')->nullable();
+            $table->text('rpc_state')->nullable();
+            $table->text('rpc_large_text')->nullable();
+            $table->text('rpc_small_text')->nullable();
+            $table->text('rpc_button1')->nullable();
+            $table->text('rpc_button1_url')->nullable();
+            $table->text('rpc_button2')->nullable();
+            $table->text('rpc_button2_url')->nullable();
             $table->timestamps();
         });
 
@@ -63,11 +63,11 @@ return new class extends Migration {
             $table->id();
             $table->boolean('alert_activation')->default(0);
             $table->boolean('alert_scroll')->default(0);
-            $table->text('alert_msg')->nullable()->default(''); // Valeur par défaut
+            $table->text('alert_msg')->nullable();
             $table->boolean('video_activation')->default(0);
-            $table->string('video_url', 255)->nullable()->default(''); // Valeur par défaut
-            $table->text('splash')->nullable()->default(''); // Valeur par défaut
-            $table->text('splash_author')->nullable()->default(''); // Valeur par défaut
+            $table->string('video_url', 255)->nullable();
+            $table->text('splash')->nullable();
+            $table->text('splash_author')->nullable();
             $table->timestamps();
         });
 
@@ -76,17 +76,17 @@ return new class extends Migration {
             $table->id();
             $table->boolean('maintenance')->default(0);
             $table->boolean('whitelist')->default(0);
-            $table->text('maintenance_message')->nullable()->default(''); // Valeur par défaut
+            $table->text('maintenance_message')->nullable();
             $table->timestamps();
         });
 
         // Table options_loader
         Schema::create('options_loader', function (Blueprint $table) {
             $table->id();
-            $table->string('minecraft_version', 50)->nullable()->default(''); // Valeur par défaut
-            $table->string('loader_type', 50)->nullable()->default(''); // Valeur par défaut
-            $table->string('loader_build_version', 50)->nullable()->default(''); // Valeur par défaut
-            $table->string('loader_forge_version', 50)->nullable()->default(''); // Valeur par défaut
+            $table->string('minecraft_version', 50)->nullable();
+            $table->string('loader_type', 50)->nullable();
+            $table->string('loader_build_version', 50)->nullable();
+            $table->string('loader_forge_version', 50)->nullable();
             $table->boolean('loader_activation')->default(1);
             $table->timestamps();
         });
@@ -96,8 +96,8 @@ return new class extends Migration {
             $table->id();
             $table->string('file', 255);
             $table->string('name', 255);
-            $table->text('description')->nullable()->default(''); // Valeur par défaut
-            $table->string('icon', 255)->nullable()->default(''); // Valeur par défaut
+            $table->text('description')->nullable();
+            $table->string('icon', 255)->nullable();
             $table->boolean('optional')->default(0);
             $table->boolean('recommended')->default(0);
             $table->timestamps();
@@ -106,14 +106,14 @@ return new class extends Migration {
         // Table roles
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->text('role_name')->default(''); // Valeur par défaut
-            $table->text('role_background')->default(''); // Valeur par défaut
+            $table->text('role_name')->nullable();
+            $table->text('role_background')->nullable();
             $table->timestamps();
         });
 
         // Table ignored_folders
         Schema::create('ignored_folders', function (Blueprint $table) {
-            $table->text('folder_name')->default(''); // Valeur par défaut
+            $table->text('folder_name')->nullable();
             $table->id();
             $table->timestamps();
         });
@@ -121,14 +121,14 @@ return new class extends Migration {
         // Table whitelist
         Schema::create('whitelist', function (Blueprint $table) {
             $table->id();
-            $table->text('users')->default(''); // Valeur par défaut
+            $table->text('users')->nullable();
             $table->timestamps();
         });
 
         // Table whitelist_roles
         Schema::create('whitelist_roles', function (Blueprint $table) {
             $table->id();
-            $table->text('role')->default(''); // Valeur par défaut
+            $table->text('role')->nullable();
             $table->timestamps();
         });
     }
