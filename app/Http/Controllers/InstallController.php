@@ -29,9 +29,7 @@ class InstallController extends Controller
 
     protected array $databaseDrivers = [
         'mysql' => 'MySQL/MariaDB',
-        'pgsql' => 'PostgreSQL',
         'sqlite' => 'SQLite',
-        'sqlsrv' => 'SQLServer',
     ];
 
     protected bool $hasRequirements;
@@ -220,10 +218,10 @@ class InstallController extends Controller
                 // Créer le fichier SQLite s'il n'existe pas
                 $this->ensureDatabaseExists();
                 
-                // Mettre à jour le .env pour SQLite (laisser DB_DATABASE vide pour SQLite)
+                // Mettre à jour le .env pour SQLite avec le chemin database_path
                 $this->updateEnvValues([
                     'DB_CONNECTION' => 'sqlite',
-                    'DB_DATABASE' => '', // Laravel utilisera database_path('database.sqlite') par défaut
+                    'DB_DATABASE' => database_path('database.sqlite'),
                     'DB_HOST' => '',
                     'DB_PORT' => '',
                     'DB_USERNAME' => '',
@@ -321,6 +319,10 @@ class InstallController extends Controller
             // Commandes post-installation
             Artisan::call('storage:link');
             
+            // Marquer l'installation comme terminée AVANT de générer la nouvelle clé
+            // pour éviter un état incohérent où la clé n'est plus temporaire mais le fichier installed n'existe pas
+            File::put(storage_path('installed'), 'Installation complétée le ' . now()->format('Y-m-d H:i:s') . "\nAdmin: " . $user->email);
+            
             // Générer une nouvelle clé d'application
             $this->generateAppKey();
 
@@ -335,9 +337,6 @@ class InstallController extends Controller
             Artisan::call('config:cache');
             Artisan::call('route:cache');
             Artisan::call('view:cache');
-
-            // Marquer l'installation comme terminée
-            File::put(storage_path('installed'), 'Installation complétée le ' . now()->format('Y-m-d H:i:s') . "\nAdmin: " . $user->email);
 
             return redirect()->route('install.finish')->with('success', 'Installation terminée avec succès !');
         } catch (Exception $e) {
