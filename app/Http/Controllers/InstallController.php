@@ -56,6 +56,30 @@ class InstallController extends Controller
         });
     }
 
+    private function getCorrectAppUrl()
+    {
+        // Utiliser l'URL de la requête actuelle pour déterminer le bon domaine
+        $request = request();
+        
+        if ($request) {
+            $scheme = $request->isSecure() ? 'https' : 'http';
+            $host = $request->getHost();
+            $port = $request->getPort();
+            
+            $url = $scheme . '://' . $host;
+            
+            // Ajouter le port seulement s'il n'est pas standard
+            if (($scheme === 'http' && $port !== 80) || ($scheme === 'https' && $port !== 443)) {
+                $url .= ':' . $port;
+            }
+            
+            return $url;
+        }
+        
+        // Fallback
+        return url('/');
+    }
+
     private function prepareEnvironment()
     {
         // Créer les dossiers nécessaires
@@ -91,7 +115,7 @@ class InstallController extends Controller
                 'APP_NAME' => '"CentralCorp Panel"',
                 'APP_ENV' => 'production',
                 'APP_DEBUG' => 'false',
-                'APP_URL' => url('/'),
+                'APP_URL' => $this->getCorrectAppUrl(),
                 'DB_CONNECTION' => 'sqlite',
                 'DB_DATABASE' => database_path('database.sqlite'),
             ]);
@@ -107,7 +131,7 @@ class InstallController extends Controller
         $envContent .= "APP_ENV=production\n";
         $envContent .= "APP_KEY=" . self::TEMP_KEY . "\n";
         $envContent .= "APP_DEBUG=false\n";
-        $envContent .= "APP_URL=" . url('/') . "\n\n";
+        $envContent .= "APP_URL=" . $this->getCorrectAppUrl() . "\n\n";
         $envContent .= "LOG_CHANNEL=stack\n";
         $envContent .= "LOG_DEPRECATIONS_CHANNEL=null\n";
         $envContent .= "LOG_LEVEL=debug\n\n";
@@ -337,6 +361,11 @@ class InstallController extends Controller
             Artisan::call('config:cache');
             Artisan::call('route:cache');
             Artisan::call('view:cache');
+
+            // Forcer l'URL correcte avant la redirection
+            $correctUrl = $this->getCorrectAppUrl();
+            $this->updateEnvValues(['APP_URL' => $correctUrl]);
+            Config::set('app.url', $correctUrl);
 
             return redirect()->route('install.finish')->with('success', 'Installation terminée avec succès !');
         } catch (Exception $e) {
