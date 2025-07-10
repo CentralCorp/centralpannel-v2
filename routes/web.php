@@ -106,6 +106,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/theme/download/{id}', [ThemeController::class, 'download'])->name('admin.theme.download');
     Route::get('/theme/purchase/{id}', [ThemeController::class, 'purchase'])->name('admin.theme.purchase');
 
+    Route::get('/update', [\App\Http\Controllers\Admin\UpdateController::class, 'index'])->name('admin.update');
+    Route::post('/update', [\App\Http\Controllers\Admin\UpdateController::class, 'update'])->name('admin.update.run');
+
 });
 
 // Routes sans le préfixe 'admin'
