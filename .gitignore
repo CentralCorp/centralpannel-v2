@@ -33,4 +33,4 @@
 /.vscode/
 /database/database.sqlite
 *.log
-/vendor
+/vendor/
