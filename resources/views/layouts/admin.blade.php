@@ -55,6 +55,11 @@
                         <i class="bi bi-folder align-middle"></i> <span class="align-middle">File Manager</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->routeIs('admin.update') ? 'active' : '' }}" href="{{ route('admin.update') }}">
+                        <i class="bi bi-sort-numeric-up-alt align-middle"></i> <span class="align-middle">Mise à Jour</span>
+                    </a>
+                </li>
                 <li class="sidebar-header">
                     Configuration
                 </li>

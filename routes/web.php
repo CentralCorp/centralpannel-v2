@@ -22,6 +22,7 @@ use App\Http\Controllers\AdminBgController;
 use App\Http\Controllers\api\ApiController;
 use App\Http\Controllers\api\FileController;
 use App\Http\Controllers\api\ModController;
+use App\Http\Controllers\Admin\UpdateController;
 
 
 Auth::routes(['register' => false]);
@@ -106,8 +107,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/theme/download/{id}', [ThemeController::class, 'download'])->name('admin.theme.download');
     Route::get('/theme/purchase/{id}', [ThemeController::class, 'purchase'])->name('admin.theme.purchase');
 
-    Route::get('/update', [\App\Http\Controllers\Admin\UpdateController::class, 'index'])->name('admin.update');
-    Route::post('/update', [\App\Http\Controllers\Admin\UpdateController::class, 'update'])->name('admin.update.run');
+    Route::get('/update', [UpdateController::class, 'index'])->name('admin.update');
+    Route::post('/update', [UpdateController::class, 'update'])->name('admin.update.run');
 
 });
 

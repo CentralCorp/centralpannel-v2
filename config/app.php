@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'CentralCorp Panel'),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ return [
     */
 
     'debug' => (bool) env('APP_DEBUG', false),
-    'version' => '1.0.0',
+    'version' => '1.0.2',
     /*
     |--------------------------------------------------------------------------
     | Application URL

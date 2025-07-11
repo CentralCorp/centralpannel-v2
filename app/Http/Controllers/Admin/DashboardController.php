@@ -24,7 +24,7 @@ class DashboardController extends Controller
     private function getReleases()
     {
         try {
-            $response = Http::get('https://github.com/CentralCorp/CentralCorp-Panel/releases.atom');
+            $response = Http::get('https://github.com/CentralCorp/centralpannel-v2/releases.atom');
             
             if (!$response->successful()) {
                 return [];

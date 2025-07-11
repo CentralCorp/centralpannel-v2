@@ -20,7 +20,6 @@
             @if($info)
                 <p>Dernière version disponible : <strong>{{ $info['version'] ?? '?' }}</strong></p>
                 <p>PHP requis : <strong>{{ $info['php_version'] ?? '?' }}</strong></p>
-                <p>Nom du fichier : <strong>{{ $info['file'] ?? '?' }}</strong></p>
             @else
                 <p>Impossible de récupérer les informations de mise à jour.</p>
             @endif
